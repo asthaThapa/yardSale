@@ -10,10 +10,10 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 
-function LoginScreen({ navigation }) {
+function SignupScreen({ navigation }) {
     const [state, setState] = useState({
         username: "",
-        email:"",
+        email: "",
         password: "",
     });
 
@@ -24,11 +24,10 @@ function LoginScreen({ navigation }) {
         navigation.setOptions({
             headerRight: () => (
                 <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate("Sign Up");
-                    }}
-                >
-                    <Text style={styles.headerButton}>Sign Up</Text>
+                    onPress={() =>
+                        navigation.navigate("Log In")
+                    }>
+                    <Text style={styles.headerButton}>Log In</Text>
                 </TouchableOpacity>
             ),
         });
@@ -63,7 +62,18 @@ function LoginScreen({ navigation }) {
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={styles.container}>
                 <Input
-                    placeholder="Enter user name"
+                    placeholder="Name"
+                    ref={initialField}
+                    value={state.username}
+                    autoCorrect={false}
+                    inputContainerStyle={styles.input}
+                    inputStyle={styles.inputtext}
+                    // errorStyle={styles.inputError}
+                    // errorMessage={validate(state.username)}
+                    onChangeText={(val) => updateStateObject({ username: val })}
+                />
+                <Input
+                    placeholder="Email"
                     ref={initialField}
                     value={state.email}
                     autoCorrect={false}
@@ -155,4 +165,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen;
+export default SignupScreen;

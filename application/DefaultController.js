@@ -10,15 +10,16 @@ import SearchScreen from './screens/SearchScreen';
 import AddPostScreen from './screens/AddPostScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import SettingScreen from './screens/SettingsScreen';
+import SignupScreen from './screens/SignupScreen';
 
 
 //Screen names
-const loginPage = "loginScreen"
+const loginPage = "Log In";
 const searchPage = "Yard Sales";
 const addPostPage = "Create Your Post";
 const favoritePage = "Favorites";
 const settingsPage = "Settings";
-
+const signupPage = "Sign Up";
 
 const myTab = createBottomTabNavigator();
 
@@ -73,7 +74,7 @@ function DefaultController() {
                 <myTab.Screen name={addPostPage} component={AddPostScreen} />
                 <myTab.Screen name={favoritePage} component={FavoriteScreen} />
                 <myTab.Screen name={settingsPage} component={SettingScreen} />
-
+                <myTab.Screen name={signupPage} component={SignupScreen}/>
             </myTab.Navigator>
 
         </NavigationContainer>
