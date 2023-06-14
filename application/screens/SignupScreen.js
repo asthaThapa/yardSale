@@ -9,6 +9,13 @@ import {
 } from "react-native"; import { Button, Input } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from "react";
 
+import {
+    initDB,
+    setupSignUpListener,
+    storeUser,
+} from "../helper/fb-data";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, set, ref } from "firebase/database";
 
 function SignupScreen({ navigation }) {
     const [state, setState] = useState({
@@ -19,13 +26,12 @@ function SignupScreen({ navigation }) {
 
     const [hidePassword, setHidePassword] = useState(true);
     const initialField = useRef(null);
-
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <TouchableOpacity
                     onPress={() =>
-                        navigation.navigate("Log In")
+                        navigation.navigate("Log In", { state })
                     }>
                     <Text style={styles.headerButton}>Log In</Text>
                 </TouchableOpacity>
@@ -34,7 +40,13 @@ function SignupScreen({ navigation }) {
     });
 
 
-
+    useEffect(() => {
+        try {
+             initDB();
+        } catch (err) {
+            console.log(err);
+        }
+    }, []);
 
     const dismissKeyboard = () => {
         console.log('Platform=', Platform.OS);
@@ -57,7 +69,36 @@ function SignupScreen({ navigation }) {
     function validate(value) {
         return (value) ? "Must be a number" : "";
     }
-    //   console.log(state.username);
+
+    const signUp = () => {
+        const auth = getAuth();
+        const data = getDatabase();
+
+        createUserWithEmailAndPassword(auth, state.email, state.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                set(ref(data, 'users/' + user.uid), {
+                    username: state.username,
+                    email: state.email,
+                    password: state.password,
+                    // profile_picture: imageUrl,
+                })
+                .then(() => {
+                    console.log("User created and data written to the database successfully");
+                  })
+                  .catch((error) => {
+                    console.log("Error writing data to the database:", error);
+                  });
+              })
+              .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log("Sign up error:", errorCode, errorMessage);
+              });
+
+    };
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={styles.container}>
@@ -105,12 +146,14 @@ function SignupScreen({ navigation }) {
                 />
                 <View>
                     <Button
-                        title="Log In"
+                        title="Sign Up"
                         color="#1be3a7"
                         buttonStyle={styles.buttons}
                         titleStyle={styles.btitle}
                         onPress={() => {
-                            console.log("log in");
+                            // console.log("log in");
+                            // storeUser(state);
+                            signUp();
                         }
                         }
                     />
@@ -143,12 +186,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
         backgroundColor: "#e6e6e6",
         borderRadius: 10,
+        height: 50,
     },
     inputtext: {
         marginLeft: 10,
     },
     headerButton: {
-        marginRight:10,
+        marginRight: 10,
         color: "#1be3a7",
         fontWeight: "bold",
     },

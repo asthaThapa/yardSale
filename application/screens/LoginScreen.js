@@ -9,11 +9,19 @@ import {
 } from "react-native"; import { Button, Input } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from "react";
 
+import firebase from 'firebase/app';
+import {
+    initDB,
+    setupSignUpListener,
+    storeUser,
+} from "../helper/fb-data";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 function LoginScreen({ navigation }) {
     const [state, setState] = useState({
         username: "",
-        email:"",
+        email: "",
         password: "",
     });
 
@@ -35,7 +43,13 @@ function LoginScreen({ navigation }) {
     });
 
 
-
+    useEffect(() => {
+        try {
+            initDB();
+        } catch (err) {
+            console.log(err);
+        }
+    }, []);
 
     const dismissKeyboard = () => {
         console.log('Platform=', Platform.OS);
@@ -55,6 +69,32 @@ function LoginScreen({ navigation }) {
         setHidePassword(!hidePassword);
     };
 
+    const handleLogin = () => {
+        const auth = getAuth();
+        const db = getDatabase();
+
+        signInWithEmailAndPassword(auth, state.email, state.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                const userRef = ref(db, 'users/' + user.uid);
+                onValue(userRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (snapshot.exists()) {
+                        const userProfile = snapshot.val();
+                        console.log("User profile data:", userProfile);
+                        // Do something with the user profile data
+                    } else {
+                        console.log("User profile does not exist in the database");
+                    }
+                  });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    };
+
     function validate(value) {
         return (value) ? "Must be a number" : "";
     }
@@ -63,7 +103,7 @@ function LoginScreen({ navigation }) {
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={styles.container}>
                 <Input
-                    placeholder="Enter user name"
+                    placeholder="Email"
                     ref={initialField}
                     value={state.email}
                     autoCorrect={false}
@@ -74,7 +114,7 @@ function LoginScreen({ navigation }) {
                     onChangeText={(val) => updateStateObject({ email: val })}
                 />
                 <Input
-                    placeholder="Enter Password"
+                    placeholder="Password"
                     ref={initialField}
                     value={state.password}
                     autoCorrect={false}
@@ -100,7 +140,7 @@ function LoginScreen({ navigation }) {
                         buttonStyle={styles.buttons}
                         titleStyle={styles.btitle}
                         onPress={() => {
-                            console.log("log in");
+                            handleLogin();
                         }
                         }
                     />
@@ -133,12 +173,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
         backgroundColor: "#e6e6e6",
         borderRadius: 10,
+        height: 50,
     },
     inputtext: {
         marginLeft: 10,
     },
     headerButton: {
-        marginRight:10,
+        marginRight: 10,
         color: "#1be3a7",
         fontWeight: "bold",
     },
