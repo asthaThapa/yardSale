@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
-} from "react-native"; import { Button, Input } from '@rneui/themed';
+} from "react-native";
+import { Button, Input } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from "react";
 
 import firebase from 'firebase/app';
@@ -15,7 +16,7 @@ import {
     setupSignUpListener,
     storeUser,
 } from "../helper/fb-data";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 function LoginScreen({ navigation }) {
@@ -26,17 +27,36 @@ function LoginScreen({ navigation }) {
     });
 
     const [hidePassword, setHidePassword] = useState(true);
+    const [isUserSignedIn, setuser] = useState(false);
     const initialField = useRef(null);
 
     useEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
+            headerRight: isUserSignedIn ? null : () => (
                 <TouchableOpacity
                     onPress={() => {
+
                         navigation.navigate("Sign Up");
+
                     }}
                 >
                     <Text style={styles.headerButton}>Sign Up</Text>
+                </TouchableOpacity>
+            ),
+            headerLeft: !isUserSignedIn ? null : () => (
+                <TouchableOpacity
+                    onPress={() => {
+                        const auth = getAuth();
+                        signOut(auth).then(() => {
+                            alert("Sign Out successfully!");
+                            setuser(false);
+                        }).catch((error) => {
+                            console.log("Error Signing out: ",error);
+                        });
+
+                    }}
+                >
+                    <Text style={styles.headerButton}>Sign Out</Text>
                 </TouchableOpacity>
             ),
         });
@@ -84,21 +104,28 @@ function LoginScreen({ navigation }) {
                         const userProfile = snapshot.val();
                         console.log("User profile data:", userProfile);
                         // Do something with the user profile data
+                        setuser(true);
+                        alert("Logged In!");
+                        navigation.navigate("Yard Sales");
                     } else {
                         console.log("User profile does not exist in the database");
                     }
-                  });
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log("Error logging in:", errorMessage);
+
+                // Display error message to the user
+                alert(errorMessage);
             });
     };
 
     function validate(value) {
         return (value) ? "Must be a number" : "";
     }
-    //   console.log(state.username);
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={styles.container}>
