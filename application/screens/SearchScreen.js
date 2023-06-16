@@ -21,10 +21,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from "react";
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { TabView, SceneMap } from 'react-native-tab-view';
 
 
 function SearchScreen({ navigation }) {
-
+const [clickstate,setState] = useState(false);
     useEffect(() => {
         try {
             initDB();
@@ -49,21 +50,25 @@ function SearchScreen({ navigation }) {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => {
-                if (navigation.isFocused()) {
                     return (
                         <TouchableOpacity
                             onPress={() => {
+                                if (clickstate) return;
+
                                 // Handle create post action
+                                setState(true);
                                 handleCreatePost();
+                                console.log("created pressed");
+                                setState(false);                                
                             }}
                         >
                             <Text style={styles.headerButton}>Create</Text>
                         </TouchableOpacity>
                     );
-                } else {
-                    return null; // Don't show any header button when user is not logged in or not on the focused screen
-                }
             },
+            // headerButton:() {
+
+            // },
         });
     });
 
