@@ -10,14 +10,7 @@ import {
 import { Button, Input } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from "react";
 
-import firebase from 'firebase/app';
-import {
-    initDB,
-    setupSignUpListener,
-    storeUser,
-} from "../helper/fb-data";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { handleLogin } from "../helper/authcontoller";
 
 function LoginScreen({ navigation }) {
     const [state, setState] = useState({
@@ -35,41 +28,14 @@ function LoginScreen({ navigation }) {
             headerRight: isUserSignedIn ? null : () => (
                 <TouchableOpacity
                     onPress={() => {
-
                         navigation.navigate("Sign Up");
-
                     }}
                 >
                     <Text style={styles.headerButton}>Sign Up</Text>
                 </TouchableOpacity>
             ),
-            headerLeft: !isUserSignedIn ? null : () => (
-                <TouchableOpacity
-                    onPress={() => {
-                        const auth = getAuth();
-                        signOut(auth).then(() => {
-                            alert("Sign Out successfully!");
-                            setuser(false);
-                        }).catch((error) => {
-                            console.log("Error Signing out: ",error);
-                        });
-
-                    }}
-                >
-                    <Text style={styles.headerButton}>Sign Out</Text>
-                </TouchableOpacity>
-            ),
         });
     });
-
-
-    useEffect(() => {
-        try {
-            initDB();
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
 
     const dismissKeyboard = () => {
         console.log('Platform=', Platform.OS);
@@ -87,39 +53,6 @@ function LoginScreen({ navigation }) {
 
     const togglehidepassword = () => {
         setHidePassword(!hidePassword);
-    };
-
-    const handleLogin = () => {
-        const auth = getAuth();
-        const db = getDatabase();
-
-        signInWithEmailAndPassword(auth, state.email, state.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                const userRef = ref(db, 'users/' + user.uid);
-                onValue(userRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (snapshot.exists()) {
-                        const userProfile = snapshot.val();
-                        console.log("User profile data:", userProfile);
-                        // Do something with the user profile data
-                        setuser(true);
-                        alert("Logged In!");
-                        navigation.navigate("Yard Sales");
-                    } else {
-                        console.log("User profile does not exist in the database");
-                    }
-                });
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log("Error logging in:", errorMessage);
-
-                // Display error message to the user
-                alert(errorMessage);
-            });
     };
 
     function validate(value) {
@@ -167,7 +100,11 @@ function LoginScreen({ navigation }) {
                         buttonStyle={styles.buttons}
                         titleStyle={styles.btitle}
                         onPress={() => {
-                            handleLogin();
+                            const error = handleLogin(state);
+                            if(!error){
+                                navigation.navigate("Main");
+                            }
+
                         }
                         }
                     />

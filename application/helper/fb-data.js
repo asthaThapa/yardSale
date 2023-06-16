@@ -9,6 +9,10 @@ export function initDB() {
   initializeApp(firebaseConfig);
 }
 
+const app = initializeApp(firebaseConfig);
+
+export default app;
+
 export function setupSignUpListener(updateFunc) {
   const db = getDatabase();
   const reference = ref(db, "User/");

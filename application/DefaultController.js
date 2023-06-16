@@ -23,73 +23,80 @@ const settingsPage = "Settings";
 const signupPage = "Sign Up";
 
 const myTab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const logStack = createNativeStackNavigator();
+const AppNavigator = createNativeStackNavigator();
 
-
-function SettingsStackScreen() {
+function LogInStack() {
     return (
-      <Stack.Navigator>
-          <Stack.Screen name={"Log In "} component={loginScreen} />
-          <Stack.Screen name={signupPage} component={SignupScreen} />
-      </Stack.Navigator>
+        <logStack.Navigator>
+            <logStack.Screen name={"Log In "} component={loginScreen} />
+            <logStack.Screen name={signupPage} component={SignupScreen} />
+        </logStack.Navigator>
     );
-  }
+}
+function Main() {
+    return (
+        <NavigationContainer>
+            <AppNavigator.Navigator>
+                <AppNavigator.Screen name="Login" component={LogInStack} options={{ headerShown: false }} />
+                <AppNavigator.Screen name="Main" component={DefaultController} options={{ headerShown: false }} />
+            </AppNavigator.Navigator>
+        </NavigationContainer>
+    );
+}
+
 
 function DefaultController() {
     return (
-        <NavigationContainer>
-            <myTab.Navigator
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
+        <myTab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
 
-                        let iconName;
+                    let iconName;
 
-                        let routeName = route.name;
+                    let routeName = route.name;
 
-                        //Getting icons for each page according to the page
-                        if (routeName === searchPage) {
-                            iconName = focused ? 'home-search' : 'home-search-outline';
+                    //Getting icons for each page according to the page
+                    if (routeName === searchPage) {
+                        iconName = focused ? 'home-search' : 'home-search-outline';
 
-                        } else if (routeName === addPostPage) {
-                            iconName = focused ? 'plus-box' : 'plus-box-outline';
+                    } else if (routeName === addPostPage) {
+                        iconName = focused ? 'plus-box' : 'plus-box-outline';
 
-                        } else if (routeName === favoritePage) {
-                            iconName = focused ? 'heart' : 'cards-heart-outline';
+                    } else if (routeName === favoritePage) {
+                        iconName = focused ? 'heart' : 'cards-heart-outline';
 
-                        } else if (routeName === settingsPage) {
-                            iconName = focused ? 'cog' : 'cog-outline';
+                    } else if (routeName === settingsPage) {
+                        iconName = focused ? 'cog' : 'cog-outline';
 
-                        }
+                    }
 
-                        return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+                    return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+                },
+                "tabBarActiveTintColor": "#5DB075",
+                "tabBarInactiveTintColor": "grey",
+                "tabBarLabelStyle": {
+                    "paddingBottom": 10,
+                    "fontSize": 10
+                },
+                "tabBarStyle": [
+                    {
+                        "display": "flex",
+                        "marginTop": 15,
+                        "borderColor": 'transparent',
+                        "borderTopWidth": 0
                     },
-                    "tabBarActiveTintColor": "#5DB075",
-                    "tabBarInactiveTintColor": "grey",
-                    "tabBarLabelStyle": {
-                        "paddingBottom": 10,
-                        "fontSize": 10
-                    },
-                    "tabBarStyle": [
-                        {
-                            "display": "flex",
-                            "marginTop": 15,
-                            "borderColor": 'transparent',
-                            "borderTopWidth": 0
-                        },
-                        null
-                    ]
-                })}
-            >
+                    null
+                ]
+            })}
+        >
+            <myTab.Screen name={searchPage} component={SearchScreen} />
+            <myTab.Screen name={addPostPage} component={AddPostScreen} />
+            <myTab.Screen name={favoritePage} component={FavoriteScreen} />
+            <myTab.Screen name={settingsPage} component={SettingScreen} />
+        </myTab.Navigator>
 
-                <myTab.Screen name={loginPage} component={SettingsStackScreen} options={{ headerShown: false }}/>
-                <myTab.Screen name={searchPage} component={SearchScreen} />
-                <myTab.Screen name={addPostPage} component={AddPostScreen} />
-                <myTab.Screen name={favoritePage} component={FavoriteScreen} />
-                <myTab.Screen name={settingsPage} component={SettingScreen} />
-            </myTab.Navigator>
-
-        </NavigationContainer>
     )
 }
 
-export default DefaultController;
+export default Main;
