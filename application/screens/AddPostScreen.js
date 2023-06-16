@@ -272,7 +272,7 @@ export default function AddPostScreen({ navigation }) {
             </View>
             {elements.map((element, index) => (
               <View style={styles.elementContainer} key={index}>
-                <Text style={styles.elementText}>{element.text}</Text>
+                <Text style={styles.elementText}>{element.itemTitle}</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                   {element.images.map((imageUri, imageIndex) => (
                     <Image
