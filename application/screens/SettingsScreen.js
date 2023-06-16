@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { Input } from 'react-native-elements';
+import { handleLogOut } from '../helper/authcontoller';
 
 
 const settingsData = [
@@ -67,7 +68,10 @@ function SettingScreen({ navigation }) {
         }
         else if (setting.id === '6') {
             // Handle log out action
-            console.log('Log out');
+            const message = handleLogOut();
+            if(!message){
+                navigation.navigate("Login");
+            }
         } else {
             // Handle other setting actions
             console.log(`Selected setting: ${setting.title}`);

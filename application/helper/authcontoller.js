@@ -28,6 +28,7 @@ export function handleLogin(state) {
                     console.log("User profile does not exist in the database");
                 }
             });
+            return "";
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -36,17 +37,20 @@ export function handleLogin(state) {
 
             // Display error message to the user
             alert(errorMessage);
+            return error;
         });
-        return errorMessage;
+        
 };
 
 export function handleLogOut(state) {
     signOut(auth).then(() => {
         alert("Sign Out successfully!");
+        return "";
     }).catch((error) => {
         console.log("Error Signing out: ",error);
+        return error;
     });
-
+    
 };
 
 
