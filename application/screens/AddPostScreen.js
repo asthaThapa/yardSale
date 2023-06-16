@@ -429,5 +429,10 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 20,
     padding: 10
+  },
+  errorMessage:{
+    fontSize: 12,
+    fontStyle:'italic',
+    color: 'red'
   }
 });
