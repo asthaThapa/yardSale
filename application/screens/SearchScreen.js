@@ -134,9 +134,8 @@ const SearchTab = ({ navigation }) => {
 };
 const MapTab = () => {
     const [mylocation, setMyLocation] = useState(null);
-    const [location, setLocation] = useState(null);
     const [data, setData] = useState([]);
-    const [post,setPost] = useState([]);
+    const [markers, setMarkers] = useState([]);
 
     useEffect(() => {
         try {
@@ -147,30 +146,37 @@ const MapTab = () => {
         }
 
 
-        const addresses = data.map((post) => ({
-            address: post.address + ", " + post.city + ", " + post.zip,
-            title: post.title,
-        }));
-        const address = addresses.map(post => post.address);
 
-        convertAddressesToCoordinates (address)
-          .then(coordinates => {
-            const mergedData = coordinates.map((coordinate, index) => ({
-              title: addresses[index].title,
-              coordinate: coordinate
-            }));
-    
-            console.log('Merged Data:', mergedData);
-          })
-          .catch(error => {
-            console.error(error);
-          });
 
     }, []);
+useEffect(() =>{
+    const addresses = data.map((post) => ({
+        address: post.address + ", " + post.city + ", " + post.zip,
+        title: post.title,
+    }));
+    const address = addresses.map(post => post.address);
+    console.log(address);
+    convertAddressesToCoordinates(address)
+        .then(coordinates => {
+            const mergedData = coordinates.map((coordinate, index) => ({
+                title: addresses[index].title,
+                coordinate: {
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude
+                }
+            }));
 
- 
+            console.log('Merged Data:', mergedData);
+            setMarkers(mergedData);
 
- 
+        })
+        .catch(error => {
+            console.error(error);
+        });
+},[data]);
+
+
+
 
     useEffect(() => {
         (async () => {
@@ -198,6 +204,8 @@ const MapTab = () => {
                         longitudeDelta: 0.0421,
                     }}
                 >
+
+
                     <Marker
                         coordinate={{
                             latitude: mylocation.coords.latitude,
@@ -205,7 +213,13 @@ const MapTab = () => {
                         }}
                         title="Your Location"
                     />
-
+                    {markers.map(marker => (
+                        <Marker
+                            key={marker.title}
+                            coordinate={marker.coordinate}
+                            title={marker.title}
+                        />
+                    ))}
                 </MapView>
             ) : (
                 <Text>Loading...</Text>
