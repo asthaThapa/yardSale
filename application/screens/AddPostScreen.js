@@ -15,7 +15,7 @@ import { Button, Input } from '@rneui/themed';
 import { useForm } from 'react-hook-form';
 import DatePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref } from "firebase/storage";
+
 
 import {
   initDB,

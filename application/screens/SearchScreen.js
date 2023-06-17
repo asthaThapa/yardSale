@@ -79,27 +79,32 @@ function SearchScreen({ navigation }) {
     });
 
     const handleSearchQuery = () => {
-        if(searchQuery == '' || searchQuery == undefined){
+        if (searchQuery == '' || searchQuery == undefined) {
             setUpListener(setData, "/postAd")
-        }else{
+        } else {
             const filteredData = data.filter(
                 (item) =>
-                  item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  item.address.toLowerCase().includes(searchQuery.toLowerCase())
-              );
-            
-            setData(filteredData);           
-        }        
+                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.address.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            setData(filteredData);
+        }
     }
 
     const renderItem = ({ item }) => (
-        <View style={styles.itemContainer}>
-            <Text style={styles.title}>{item.title} <MaterialIcons name="arrow-forward-ios" size={20} color="#5DB075" style={flexDirection = "row"} /></Text>
-            <Text style={styles.location}>
-                <MaterialIcons name="location-on" size={20} color="#5DB075" />{item.address},{item.city},{item.zip}
-            </Text>
-            <Text style={styles.date}>{item.date}</Text>
-        </View>
+        <TouchableOpacity
+            onPress={() => {
+                navigation.navigate("Details", item.id);
+            }}>
+            <View style={styles.itemContainer}>
+                <Text style={styles.title}>{item.title} <MaterialIcons name="arrow-forward-ios" size={20} color="#5DB075" style={flexDirection = "row"} /></Text>
+                <Text style={styles.location}>
+                    <MaterialIcons name="location-on" size={20} color="#5DB075" />{item.address},{item.city},{item.zip}
+                </Text>
+                <Text style={styles.date}>{item.date}</Text>
+            </View>
+        </TouchableOpacity>
     );
 
 
@@ -113,10 +118,10 @@ function SearchScreen({ navigation }) {
                     color="#BDBDBD"
                     onChangeText={setSearchQuery}
                 />
-                  <TouchableOpacity
+                <TouchableOpacity
                     onPress={handleSearchQuery}>
-                        <Feather name="search" size={24} color="#5DB075" />
-                  </TouchableOpacity>
+                    <Feather name="search" size={24} color="#5DB075" />
+                </TouchableOpacity>
             </View>
             <FlatList
                 data={data}

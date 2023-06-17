@@ -36,7 +36,7 @@ function LogInStack() {
         </logStack.Navigator>
     );
 }
-function detailsStack(){
+function DetailsStack(){
     return (
         <detailStack.Navigator>
             <detailStack.Screen name={searchPage} component={SearchScreen} />
@@ -100,7 +100,7 @@ function DefaultController() {
                 ]
             })}
         >
-            <myTab.Screen name={"Search"} component={detailsStack} />
+            <myTab.Screen name={"Search"} component={DetailsStack} />
             <myTab.Screen name={addPostPage} component={AddPostScreen} />
             <myTab.Screen name={favoritePage} component={FavoriteScreen} />
             <myTab.Screen name={settingsPage} component={SettingScreen} />
