@@ -93,6 +93,13 @@ export function getUser(){
     return user.uid;
 };
 
+export function getAddress(){
+    return user.location;
+}
+
+export function getPhoneNumber(){
+    return user.phonenumber;
+}
 
 export function getUserInfo() {
     return new Promise((resolve, reject) => {
@@ -111,7 +118,7 @@ export function getUserInfo() {
 
   export function updateinfo(text,title){
 
-    
+
     set(ref(db, 'users/' + user.uid), {
 
       });
