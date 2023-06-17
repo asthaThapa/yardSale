@@ -29,6 +29,8 @@ function SearchScreen({ navigation }) {
 
     const [data, setData] = useState([]);
 
+    const [searchQuery, setSearchQuery] = useState('');
+
     useEffect(() => {
         try {
             initDB();
@@ -76,7 +78,19 @@ function SearchScreen({ navigation }) {
         });
     });
 
-    const searchText = '';
+    const handleSearchQuery = () => {
+        if(searchQuery == '' || searchQuery == undefined){
+            setUpListener(setData, "/postAd")
+        }else{
+            const filteredData = data.filter(
+                (item) =>
+                  item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  item.address.toLowerCase().includes(searchQuery.toLowerCase())
+              );
+            
+            setData(filteredData);           
+        }        
+    }
 
     const renderItem = ({ item }) => (
         <View style={styles.itemContainer}>
@@ -95,10 +109,14 @@ function SearchScreen({ navigation }) {
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search Yard Sales"
-                    value={searchText}
+                    value={searchQuery}
                     color="#BDBDBD"
+                    onChangeText={setSearchQuery}
                 />
-                <Feather name="search" size={24} color="#5DB075" />
+                  <TouchableOpacity
+                    onPress={handleSearchQuery}>
+                        <Feather name="search" size={24} color="#5DB075" />
+                  </TouchableOpacity>
             </View>
             <FlatList
                 data={data}
