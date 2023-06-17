@@ -56,14 +56,14 @@ function SettingScreen({ navigation }) {
         switch (id) {
             case '1': return 'email';
             case '2': return 'password';
-            case '3': return phonenumber;
+            case '3': return 'phonenumber';
             case '4': return 'name';
             case '5': return 'location';
             default: return null;
         }
     };
     const handleSave = () => {
-        const title = findSettingByProperty(settingValue);
+        const title = findSettingByProperty(settingValue.id);
         if (title) {
             updateinfo(input, title);
         }
@@ -145,6 +145,9 @@ function SettingScreen({ navigation }) {
                 keyExtractor={(item) => item.id}
                 style={styles.list}
             />
+            <View>
+                {AddressAutocomplete}
+            </View>
         </View>
     );
 }

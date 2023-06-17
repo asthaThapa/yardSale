@@ -98,11 +98,11 @@ export function getUser() {
 
 export function getAddress() {
   return user.location;
-}
+};
 
 export function getPhoneNumber() {
   return user.phonenumber;
-}
+};
 
 export function getUserInfo() {
   return new Promise((resolve, reject) => {
@@ -124,7 +124,7 @@ export function updateinfo(text, title) {
   const updates = {};
   updates[title] = text;
   update(ref(db, `users/${user.uid}`), updates);
-}
+};
 
 export function updateemail(text) {
   updateEmail(auth.currentUser, text).then(() => {
