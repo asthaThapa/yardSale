@@ -1,5 +1,12 @@
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    onAuthStateChanged, 
+    signOut,
+    updateEmail,
+    updateProfile,
+ } from "firebase/auth";
+import { getDatabase, ref, onValue, } from "firebase/database";
 import {
     app
 } from "../helper/fb-data";
@@ -7,8 +14,6 @@ import {
 const auth = getAuth(app);
 const db = getDatabase(app);
 let  user = '';
-let errorMessage = '';
-
 
 
 
@@ -57,3 +62,55 @@ export function handleLogOut(state) {
 export function getUser(){
     return user.uid;
 };
+
+
+export function getUserInfo() {
+    const userInfo = {};
+    const session = auth.currentUser;
+
+    if (session !== null) {
+        session.providerData.forEach((profile) => {
+        userInfo.providerId = profile.providerId;
+        userInfo.uid = profile.uid;
+        userInfo.displayName = profile.displayName;
+        userInfo.email = profile.email;
+        userInfo.photoURL = profile.photoURL;
+      });
+    }
+  
+    return userInfo;
+  };
+
+  export function updateinfo(text,title){
+    const info = `${title}: "${text}"`;
+    updateProfile(auth.currentUser, {
+        info
+      }).then(() => {
+        // Profile updated!
+        alert("Profile Updated!");
+      }).catch((error) => {
+        // An error occurred
+        // ...
+      });
+  };
+
+  export function updateemail(text){
+    updateEmail(auth.currentUser, text).then(() => {
+        // Email updated!
+        alert("Email Updated!");
+      }).catch((error) => {
+        // An error occurred
+        
+      });
+      
+  };
+
+  export function updatePassWord(text){
+    updatePassword(user, text).then(() => {
+        // Update successful.
+        alert("Password Updated!");
+      }).catch((error) => {
+        // An error ocurred
+        // ...
+      });
+  }
