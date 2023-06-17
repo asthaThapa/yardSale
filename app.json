@@ -19,14 +19,24 @@
       "bundleIdentifier": "com.yardsale.myapp",
       "config": {
         "googleMapsApiKey": "AIzaSyBNSPQNPsqQsS9ItjrC-vAz6VeCArJrgmk"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location."
       }
     },
     "android": {
+      "permissions": ["ACCESS_FINE_LOCATION"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yardsale.myapp"
+      "package": "com.yardsale.myapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBNSPQNPsqQsS9ItjrC-vAz6VeCArJrgmk"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

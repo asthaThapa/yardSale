@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Input } from 'react-native-elements';
 import { getUserInfo, handleLogOut, updateemail, updatePassWord, updateinfo } from '../helper/authcontoller';
-
+import { AddressAutocomplete } from '../helper/mapcontroller';
 
 const settingsData = [
     { username: "", },
@@ -30,7 +30,19 @@ function SettingScreen({ navigation }) {
     const [isModalVisible, setModalVisible] = useState(false);
     const [settingValue, setSettingValue] = useState('');
     const [inputstate, settingInput] = useState('');
+    const [currentVal, setCurrent] = useState('');
 
+    useEffect(() => {
+        getUserInfo()
+            .then((data) => {
+                // Use the user data here
+                setCurrent(data);
+            })
+            .catch((error) => {
+                // Handle any errors that occurred
+                console.error(error);
+            });
+    }, []);
 
     const openModal = () => {
         setModalVisible(true);
@@ -40,19 +52,9 @@ function SettingScreen({ navigation }) {
         setModalVisible(false);
     };
     const handleSave = () => {
-        // Perform the necessary actions to save the updated setting
-        // For example, make an API call to update the setting on the server
-        console.log(inputstate);
 
-        if (settingValue.id === '1') {
-            updateemail(inputstate);
-        } else if (settingValue.id === '2') {
+        updateinfo(inputstate, settingValue);
 
-            updatePassWord(inputstate);
-        }
-        else {
-            updateinfo(inputstate, settingValue);
-        }
         // Close the modal after saving
         closeModal();
         settingInput("");
@@ -69,9 +71,17 @@ function SettingScreen({ navigation }) {
             // Handle other setting actions
             setSettingValue(setting);
             openModal();
-            console.log(`Selected setting: ${setting.title}`);
+            // console.log(`Selected setting: ${setting.title}`);
+        
+        getUserInfo()
+            .then((data) => {
+                setCurrent(data);
+                // console.log(`User info: ${JSON.stringify(data)}`);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         }
-
     };
 
     const renderSettingItem = ({ item }) => (
@@ -87,14 +97,15 @@ function SettingScreen({ navigation }) {
     );
 
     const display = (info) => {
-        const profile = getUserInfo();
-        // console.log(profile);       
+        console.log(currentVal);
         switch (info.id) {
-            case '1': return profile.email;
-            case '2': return profile.password;
-            case '3': return profile.phonenumber;
-            case '4': return profile.name;
-            case '5': return profile.location;
+            case '1': currentVal.email
+
+                ;
+            case '2': return currentVal.password;
+            case '3': return currentVal.phonenumber;
+            case '4': return currentVal.name;
+            case '5': return currentVal.location;
             default: return null;
         }
 

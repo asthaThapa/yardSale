@@ -111,7 +111,11 @@ function SignupScreen({ navigation }) {
                         onPress={() => {
                             // console.log("log in");
                             // storeUser(state);
-                            handleSignUp(state);
+                            
+                            const error = handleSignUp(state);
+                            if(!error){
+                                navigation.navigate("Log In ");
+                            }
                         }
                         }
                     />

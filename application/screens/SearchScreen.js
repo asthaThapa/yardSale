@@ -21,8 +21,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from "react";
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { TabView, SceneMap,TabBar } from 'react-native-tab-view';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+
 
 const SearchTab = ({ navigation }) => {
     const [clickstate, setState] = useState(false);
@@ -129,18 +131,45 @@ const SearchTab = ({ navigation }) => {
     );
 };
 const MapTab = () => {
+    const [location, setLocation] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Location permission denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            console.log('Location:', location);
+            setLocation(location);
+        })();
+    }, []);
+
     return (
         <View style={{ flex: 1 }}>
-            <MapView
-                style={{ flex: 1 }}
-                provider={PROVIDER_GOOGLE}
-                initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }}
-            />
+            {location && location.coords ? (
+                <MapView
+                    style={{ flex: 1 }}
+                    initialRegion={{
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                >
+                    <Marker
+                        coordinate={{
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                        }}
+                        title="Your Location"
+                    />
+                </MapView>
+            ) : (
+                <Text>Loading...</Text>
+            )}
         </View>
     );
 };
@@ -159,7 +188,7 @@ function SearchScreen({ navigation }) {
             {...props}
             indicatorStyle={{ backgroundColor: 'white' }}
             style={{ backgroundColor: 'white' }}
-            labelStyle= {{color: '#1be3a7'}}
+            labelStyle={{ color: '#1be3a7' }}
         />
     );
 
