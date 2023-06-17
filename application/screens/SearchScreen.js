@@ -24,6 +24,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { convertAddressesToCoordinates } from '../helper/mapcontroller';
 
 
 const SearchTab = ({ navigation }) => {
@@ -131,7 +132,44 @@ const SearchTab = ({ navigation }) => {
     );
 };
 const MapTab = () => {
+    const [mylocation, setMyLocation] = useState(null);
     const [location, setLocation] = useState(null);
+    const [data, setData] = useState([]);
+    const [post,setPost] = useState([]);
+
+    useEffect(() => {
+        try {
+            initDB();
+            setUpListener(setData, "/postAd")
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        const addresses = data.map((post) => ({
+            address: post.address + ", " + post.city + ", " + post.zip,
+            title: post.title,
+        }));
+        const address = addresses.map(post => post.address);
+
+        convertAddressesToCoordinates (address)
+          .then(coordinates => {
+            const mergedData = coordinates.map((coordinate, index) => ({
+              title: addresses[index].title,
+              coordinate: coordinate
+            }));
+    
+            console.log('Merged Data:', mergedData);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+
+    }, []);
+
+ 
+
+ 
 
     useEffect(() => {
         (async () => {
@@ -143,29 +181,30 @@ const MapTab = () => {
 
             let location = await Location.getCurrentPositionAsync({});
             console.log('Location:', location);
-            setLocation(location);
+            setMyLocation(location);
         })();
     }, []);
 
     return (
         <View style={{ flex: 1 }}>
-            {location && location.coords ? (
+            {mylocation && mylocation.coords ? (
                 <MapView
                     style={{ flex: 1 }}
                     initialRegion={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude,
+                        latitude: mylocation.coords.latitude,
+                        longitude: mylocation.coords.longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
                 >
                     <Marker
                         coordinate={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude,
+                            latitude: mylocation.coords.latitude,
+                            longitude: mylocation.coords.longitude,
                         }}
                         title="Your Location"
                     />
+
                 </MapView>
             ) : (
                 <Text>Loading...</Text>
