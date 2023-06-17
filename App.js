@@ -3,7 +3,7 @@ import * as React from 'react'
 import DefaultController from './application/DefaultController';
 
 export default function App() {
-  console.log("Hellooo")
+  console.log("Initializing TYard Sale App")
   return (
     <DefaultController/>
   );
