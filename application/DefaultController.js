@@ -67,7 +67,7 @@ function DefaultController() {
                     let routeName = route.name;
 
                     //Getting icons for each page according to the page
-                    if (routeName === searchPage) {
+                    if (routeName === "Search") {
                         iconName = focused ? 'home-search' : 'home-search-outline';
 
                     } else if (routeName === addPostPage) {
