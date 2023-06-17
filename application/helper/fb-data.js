@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { getDatabase, onValue, push, ref, set, update } from "firebase/database";
-import {firebaseConfig} from "../helper/fb-credentials";
+import { getDatabase, onValue, push, ref, set, update, query, orderByChild, equalTo, startAt } from "firebase/database";
+import { firebaseConfig } from "../helper/fb-credentials";
 
 
 export function initDB() {
@@ -60,6 +60,23 @@ export function setUpListener(updateFunc, dbName) {
     }
   });
 }
+
+export function setUpDetailListener(updateFunc, dbName, postId) {
+  const db = getDatabase();
+  const reference = ref(db, dbName + "/");
+  onValue(reference, (snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      if (childSnapshot.key == postId) {
+        if (childSnapshot?.val()) {
+          updateFunc([childSnapshot?.val()])
+        }else{
+          updateFunc([])
+        }
+      }
+    });
+  });
+}
+
 
 
 
