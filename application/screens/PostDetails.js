@@ -16,7 +16,9 @@ import {
 import { useEffect, useState } from "react";
 import {
     initDB,
-    setUpDetailListener
+    setUpDetailListener,
+    saveFavorite,
+    removeFavorite
 } from "../helper/fb-data";
 
 //Importing icons
@@ -29,6 +31,8 @@ const { width } = Dimensions.get('window');
 const PostDetails = ({ route, navigation }) => {
 
     const [postDetail, setPostDetails] = useState({});
+
+    const [favoritePostId, setFavoritePostId] = useState('')
 
     //Connecting DB
     useEffect(() => {
@@ -47,8 +51,24 @@ const PostDetails = ({ route, navigation }) => {
     const [isOutline, setIsOutline] = useState(false);
 
     const toggleIcon = () => {
+
+        if (!isOutline) {
+            Alert.alert('Added to favorites!');
+            try {
+                const postId = saveFavorite(postDetail, 'favorites')
+                setFavoritePostId(postId)
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            Alert.alert('Removed from favorites!');
+            console.log(favoritePostId)
+            removeFavorite(favoritePostId, 'favorites')
+            setFavoritePostId('')
+        }
+
         setIsOutline(!isOutline);
-        Alert.alert('Added to favorites!');
+
     };
 
 
@@ -247,7 +267,7 @@ const styles = StyleSheet.create({
     eachSelling: {
         flexDirection: 'row'
     },
-    locationDetail:{
+    locationDetail: {
         margin: 10
     }
 });
