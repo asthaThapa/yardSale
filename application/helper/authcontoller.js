@@ -23,8 +23,8 @@ export function handleLogin(state) {
                 if (snapshot.exists()) {
                     const userProfile = snapshot.val();
                     console.log("User profile data:", userProfile);
-                    alert("Logged In!");
                 } else {
+                    alert("Could not login, try again!");
                     console.log("User profile does not exist in the database");
                 }
             });

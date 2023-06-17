@@ -14,9 +14,9 @@ import { handleLogin } from "../helper/authcontoller";
 
 function LoginScreen({ navigation }) {
     const [state, setState] = useState({
-        username: "",
-        email: "",
-        password: "",
+        username: "User1@mail.com",
+        email: "123456",
+        password: "Baozi",
     });
 
     const [hidePassword, setHidePassword] = useState(true);
