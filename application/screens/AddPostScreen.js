@@ -122,23 +122,29 @@ export default function AddPostScreen({ navigation }) {
 
   //Form handling
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-  
+
   const Submit = (data) => {
     if (elements.length < 1) {
       Alert.alert('Please add items');
       return
     } else {
-      data["time"] = time;
-      data["date"] = date;
+      const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+      const formattedDate = date.toLocaleDateString('en-US', options);
+
+      const timeOpt = { hour: 'numeric', minute: 'numeric', hour12: true };
+      const formattedTime = date.toLocaleTimeString('en-US', timeOpt);
+
+      data["time"] = formattedTime;
+      data["date"] = formattedDate;
       data["items"] = elements
 
       if (data['note'] == undefined) {
         data["note"] = '';
       }
 
-     saveItem(data, "postAd")
+      saveItem(data, "postAd")
     }
-   
+
   };
 
   return (
