@@ -8,7 +8,7 @@ import {
   createUserWithEmailAndPassword,
   updatePassword,
 } from "firebase/auth";
-import { getDatabase, ref, onValue, set, } from "firebase/database";
+import { getDatabase, ref, onValue, set,update} from "firebase/database";
 import {
   app
 } from "../helper/fb-data";
@@ -121,18 +121,18 @@ export function getUserInfo() {
 };
 
 export function updateinfo(text, title) {
-
-
-  set(ref(db, 'users/' + user.uid), {
-
-  });
-};
+  const updates = {};
+  updates[title] = text;
+  update(ref(db, `users/${user.uid}`), updates);
+}
 
 export function updateemail(text) {
   updateEmail(auth.currentUser, text).then(() => {
     // Email updated!
     alert("Email Updated!");
-
+    update(ref(db, `users/${user.uid}`), {
+      email:text,
+    });
   }).catch((error) => {
     // An error occurred
     console.log(error);
@@ -144,6 +144,9 @@ export function updatePassWord(text) {
   updatePassword(user, text).then(() => {
     // Update successful.
     alert("Password Updated!");
+    update(ref(db, `users/${user.uid}`), {
+      password:text,
+    });
   }).catch((error) => {
     // An error ocurred
     // ...

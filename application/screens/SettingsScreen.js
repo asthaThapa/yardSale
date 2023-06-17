@@ -17,7 +17,7 @@ import { getUserInfo, handleLogOut, updateemail, updatePassWord, updateinfo } fr
 import { AddressAutocomplete } from '../helper/mapcontroller';
 
 const settingsData = [
-    { username: "", },
+    { id: '0', username: "", },
     { id: '1', title: 'Email', email: '', },
     { id: '2', title: 'Password', password: '', },
     { id: '3', title: 'Phone Number', phonenumber: '', },
@@ -28,8 +28,8 @@ const settingsData = [
 
 function SettingScreen({ navigation }) {
     const [isModalVisible, setModalVisible] = useState(false);
-    const [settingValue, setSettingValue] = useState('');
-    const [inputstate, settingInput] = useState('');
+    const [settingValue, setValue] = useState('');
+    const [input, setInput] = useState('');
     const [currentVal, setCurrent] = useState('');
 
     useEffect(() => {
@@ -51,13 +51,26 @@ function SettingScreen({ navigation }) {
     const closeModal = () => {
         setModalVisible(false);
     };
-    const handleSave = () => {
 
-        updateinfo(inputstate, settingValue);
+    const findSettingByProperty = (id) => {
+        switch (id) {
+            case '1': return 'email';
+            case '2': return 'password';
+            case '3': return phonenumber;
+            case '4': return 'name';
+            case '5': return 'location';
+            default: return null;
+        }
+    };
+    const handleSave = () => {
+        const title = findSettingByProperty(settingValue);
+        if (title) {
+            updateinfo(input, title);
+        }
 
         // Close the modal after saving
         closeModal();
-        settingInput("");
+        setInput("");
     };
 
     const handleSettingPress = (setting) => {
@@ -69,18 +82,16 @@ function SettingScreen({ navigation }) {
             }
         } else {
             // Handle other setting actions
-            setSettingValue(setting);
+            setValue(setting);
             openModal();
-            // console.log(`Selected setting: ${setting.title}`);
-        
-        getUserInfo()
-            .then((data) => {
-                setCurrent(data);
-                // console.log(`User info: ${JSON.stringify(data)}`);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+
+            getUserInfo()
+                .then((data) => {
+                    setCurrent(data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         }
     };
 
@@ -99,9 +110,7 @@ function SettingScreen({ navigation }) {
     const display = (info) => {
         console.log(currentVal);
         switch (info.id) {
-            case '1': currentVal.email
-
-                ;
+            case '1': return currentVal.email;
             case '2': return currentVal.password;
             case '3': return currentVal.phonenumber;
             case '4': return currentVal.name;
@@ -120,8 +129,8 @@ function SettingScreen({ navigation }) {
                         <Text style={styles.display}>{display(settingValue)}</Text>
                         <Input
                             style={styles.input}
-                            value={inputstate}
-                            onChangeText={text => settingInput(text)}
+                            value={input}
+                            onChangeText={text => setInput(text)}
                             placeholder={`Enter a new ${settingValue.title}`}
                         />
 
