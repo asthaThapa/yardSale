@@ -1,4 +1,3 @@
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { google_API} from './google_credentials';
 import axios from 'axios';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';

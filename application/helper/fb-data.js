@@ -10,12 +10,11 @@ export function initDB() {
   initializeApp(firebaseConfig);
 }
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+export const db = getDatabase(app);
 
-export default app;
 
 export function setupSignUpListener(updateFunc) {
-  const db = getDatabase();
   const reference = ref(db, "User/");
   onValue(reference, (snapshot) => {
     if (snapshot?.val()) {
@@ -32,21 +31,18 @@ export function setupSignUpListener(updateFunc) {
 }
 
 export function storeUser(item) {
-  const db = getDatabase();
   const reference = ref(db, "User/");
   push(reference, item);
 }
 
 
 export function saveItem(item, dbName) {
-  const db = getDatabase();
   const reference = ref(db, dbName + "/");
   push(reference, item);
 }
 
 
 export function setUpListener(updateFunc, dbName) {
-  const db = getDatabase();
   const reference = ref(db, dbName + "/");
   onValue(reference, (snapshot) => {
     if (snapshot?.val()) {
@@ -63,7 +59,6 @@ export function setUpListener(updateFunc, dbName) {
 }
 
 export function setUpDetailListener(updateFunc, dbName, postId) {
-  const db = getDatabase();
   const reference = ref(db, dbName + "/");
   onValue(reference, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
@@ -79,13 +74,11 @@ export function setUpDetailListener(updateFunc, dbName, postId) {
 }
 
 export function saveFavorite(item, dbName) {
-    const db = getDatabase();
     const reference = ref(db, dbName + "/");
     push(reference, item);
 }
 
 export function removeFavorite(postId, dbName) {
-  const db = getDatabase();
   const reference = ref(db, dbName + "/" + postId)
   remove(reference)
     .then(() => {
@@ -97,7 +90,6 @@ export function removeFavorite(postId, dbName) {
 }
 
 export function setupFavoriteListener(updateFunc, dbName) {
-  const db = getDatabase();
   const userId = getUser();
   const reference = ref(db, dbName + "/");
   onValue(reference, (snapshot) => {

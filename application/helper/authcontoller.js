@@ -1,20 +1,17 @@
 import {
   getAuth,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   signOut,
   updateEmail,
-  updateProfile,
   createUserWithEmailAndPassword,
   updatePassword,
 } from "firebase/auth";
-import { getDatabase, ref, onValue, set,update} from "firebase/database";
+import {  ref, onValue, set,update} from "firebase/database";
 import {
-  app
+  app,db
 } from "../helper/fb-data";
 
 const auth = getAuth(app);
-const db = getDatabase(app);
 let user = '';
 
 export function handleSignUp(state) {

@@ -15,7 +15,6 @@ import { Button, Input } from '@rneui/themed';
 import { useForm } from 'react-hook-form';
 import DatePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref } from "firebase/storage";
 
 import {
   initDB,
@@ -121,7 +120,7 @@ export default function AddPostScreen({ navigation }) {
   // };
 
   //Form handling
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue,reset } = useForm();
 
   const Submit = (data) => {
     if (elements.length < 1) {
@@ -143,6 +142,8 @@ export default function AddPostScreen({ navigation }) {
       }
 
       saveItem(data, "postAd")
+      reset();
+      navigation.navigate("Search");
     }
 
   };

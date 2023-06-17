@@ -15,17 +15,15 @@ import {
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { TextInput } from 'react-native-gesture-handler';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { convertAddressesToCoordinates } from '../helper/mapcontroller';
 
 
 const SearchTab = ({ navigation }) => {
-    const [clickstate, setState] = useState(false);
 
     const [data, setData] = useState([]);
 
@@ -39,41 +37,6 @@ const SearchTab = ({ navigation }) => {
             console.log(err);
         }
     }, []);
-
-    const handleCreatePost = () => {
-        const auth = getAuth();
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is logged in, allow them to add a post
-                navigation.navigate("Create Your Post");
-            } else {
-                alert("Please Log In first!");
-                navigation.navigate("Log In");
-            }
-        });
-    };
-
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () => {
-                return (
-                    <TouchableOpacity
-                        onPress={() => {
-                            if (clickstate) return;
-
-                            // Handle create post action
-                            setState(true);
-                            handleCreatePost();
-                            console.log("created pressed");
-                            setState(false);
-                        }}
-                    >
-                        <Text style={styles.headerButton}>Create</Text>
-                    </TouchableOpacity>
-                );
-            },
-        });
-    });
 
     const handleSearchQuery = () => {
         if (searchQuery == '' || searchQuery == undefined) {

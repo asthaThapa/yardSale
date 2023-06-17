@@ -7,10 +7,9 @@ import {
     FlatList,
     Modal
 } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Input } from 'react-native-elements';
-import { getUserInfo, handleLogOut, updateemail, updatePassWord, updateinfo } from '../helper/authcontoller';
-import { AddressAutocomplete } from '../helper/mapcontroller';
+import { getUserInfo, handleLogOut, updateinfo } from '../helper/authcontoller';
 
 const settingsData = [
     { id: '0', username: "", },
