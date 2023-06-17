@@ -104,6 +104,11 @@ export function getPhoneNumber() {
   return user.phonenumber;
 };
 
+export function getEmail(){
+  return user.email;
+}
+
+
 export function getUserInfo() {
   return new Promise((resolve, reject) => {
     const userRef = ref(db, 'users/' + user.uid);
