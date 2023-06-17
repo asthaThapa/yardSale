@@ -1,11 +1,8 @@
 import * as React from 'react';
 import {
-    Keyboard,
-    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
     FlatList,
     useWindowDimensions,
@@ -97,9 +94,13 @@ const SearchTab = ({ navigation }) => {
                 navigation.navigate("Details", item.id);
             }}>
             <View style={styles.itemContainer}>
-                <Text style={styles.title}>{item.title} <MaterialIcons name="arrow-forward-ios" size={20} color="#5DB075" style={flexDirection = "row"} /></Text>
+                <View style={styles.subHeader}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <MaterialIcons name="arrow-forward-ios" size={30} color="#5DB075" style={flexDirection = "row"} />
+                </View>
+
                 <Text style={styles.location}>
-                    <MaterialIcons name="location-on" size={20} color="#5DB075" />{item.address},{item.city},{item.zip}
+                    <MaterialIcons name="location-on" size={30} color="#5DB075" />{item.address},{item.city},{item.zip}
                 </Text>
                 <Text style={styles.date}>{item.date}</Text>
             </View>
@@ -125,7 +126,7 @@ const SearchTab = ({ navigation }) => {
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => index.toString()}
             />
         </View>
     );
@@ -272,6 +273,10 @@ const styles = StyleSheet.create({
         color: "#1be3a7",
         fontWeight: "bold",
     },
+    subHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    }
 });
 
 export default SearchScreen;

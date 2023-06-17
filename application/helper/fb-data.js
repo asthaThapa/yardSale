@@ -3,6 +3,7 @@ import { getAnalytics } from "firebase/analytics";
 
 import { getDatabase, onValue, push, ref, remove } from "firebase/database";
 import { firebaseConfig } from "../helper/fb-credentials";
+import { getUser } from '../helper/authcontoller';
 
 
 export function initDB() {
@@ -78,20 +79,12 @@ export function setUpDetailListener(updateFunc, dbName, postId) {
 }
 
 export function saveFavorite(item, dbName) {
-  try {
     const db = getDatabase();
     const reference = ref(db, dbName + "/");
-    const newChildRef = push(reference, item);
-    const docId = newChildRef.key;
-    return docId;
-  } catch (err) {
-    console.log(err);
-  }
-
+    push(reference, item);
 }
 
 export function removeFavorite(postId, dbName) {
-  console.log(postId)
   const db = getDatabase();
   const reference = ref(db, dbName + "/" + postId)
   remove(reference)
@@ -101,6 +94,23 @@ export function removeFavorite(postId, dbName) {
     .catch((error) => {
       console.error("Error removing favorite:", error);
     });
+}
+
+export function setupFavoriteListener(updateFunc, dbName) {
+  const db = getDatabase();
+  const userId = getUser();
+  const reference = ref(db, dbName + "/");
+  onValue(reference, (snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      const result = childSnapshot?.val();
+      if (result?.userId == userId) {
+        result.id = childSnapshot?.key
+        updateFunc([result])
+      } else {
+        updateFunc([])
+      }
+    });
+});
 }
 
 
