@@ -5,8 +5,9 @@ import {
     signOut,
     updateEmail,
     updateProfile,
+    createUserWithEmailAndPassword,
  } from "firebase/auth";
-import { getDatabase, ref, onValue, } from "firebase/database";
+import { getDatabase, ref, onValue,set, } from "firebase/database";
 import {
     app
 } from "../helper/fb-data";
@@ -15,7 +16,33 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 let  user = '';
 
+export function handleSignUp(state) {
+        createUserWithEmailAndPassword(auth, state.email, state.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                set(ref(db, 'users/' + user.uid), {
+                    username: state.username,
+                    email: state.email,
+                    password: state.password,
+                    // profile_picture: imageUrl,
+                })
+                .then(() => {
 
+                    console.log("User created and data written to the database successfully");
+                  })
+                  .catch((error) => {
+                    console.log("Error writing data to the database:", error);
+                  });
+              })
+              .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log("Sign up error:", errorCode, errorMessage);
+              });
+
+
+};
 
 export function handleLogin(state) {
     signInWithEmailAndPassword(auth, state.email, state.password)

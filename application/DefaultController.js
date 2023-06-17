@@ -100,7 +100,7 @@ function DefaultController() {
                 ]
             })}
         >
-            <myTab.Screen name={"Search"} component={DetailsStack} />
+            <myTab.Screen name={"Search"} component={DetailsStack} options={{ headerShown: false }}/>
             <myTab.Screen name={addPostPage} component={AddPostScreen} />
             <myTab.Screen name={favoritePage} component={FavoriteScreen} />
             <myTab.Screen name={settingsPage} component={SettingScreen} />

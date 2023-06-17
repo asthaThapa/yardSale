@@ -8,20 +8,16 @@ import {
     View,
 } from "react-native"; import { Button, Input } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from "react";
-
-import {
-    initDB,
-    setupSignUpListener,
-    storeUser,
-} from "../helper/fb-data";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, set, ref } from "firebase/database";
+import { handleSignUp } from "../helper/authcontoller";
 
 function SignupScreen({ navigation }) {
     const [state, setState] = useState({
         username: "",
         email: "",
         password: "",
+        phonenumber: "",
+        name: "",
+        location: "",
     });
 
     const [hidePassword, setHidePassword] = useState(true);
@@ -38,15 +34,6 @@ function SignupScreen({ navigation }) {
             ),
         });
     });
-
-
-    useEffect(() => {
-        try {
-             initDB();
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
 
     const dismissKeyboard = () => {
         console.log('Platform=', Platform.OS);
@@ -69,35 +56,6 @@ function SignupScreen({ navigation }) {
     function validate(value) {
         return (value) ? "Must be a number" : "";
     }
-
-    const signUp = () => {
-        const auth = getAuth();
-        const data = getDatabase();
-
-        createUserWithEmailAndPassword(auth, state.email, state.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                set(ref(data, 'users/' + user.uid), {
-                    username: state.username,
-                    email: state.email,
-                    password: state.password,
-                    // profile_picture: imageUrl,
-                })
-                .then(() => {
-                    console.log("User created and data written to the database successfully");
-                  })
-                  .catch((error) => {
-                    console.log("Error writing data to the database:", error);
-                  });
-              })
-              .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log("Sign up error:", errorCode, errorMessage);
-              });
-
-    };
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -153,7 +111,7 @@ function SignupScreen({ navigation }) {
                         onPress={() => {
                             // console.log("log in");
                             // storeUser(state);
-                            signUp();
+                            handleSignUp(state);
                         }
                         }
                     />
