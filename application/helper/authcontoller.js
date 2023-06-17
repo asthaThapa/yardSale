@@ -6,6 +6,7 @@ import {
     updateEmail,
     updateProfile,
     createUserWithEmailAndPassword,
+    updatePassword,
  } from "firebase/auth";
 import { getDatabase, ref, onValue,set, } from "firebase/database";
 import {
@@ -25,7 +26,9 @@ export function handleSignUp(state) {
                     username: state.username,
                     email: state.email,
                     password: state.password,
-                    // profile_picture: imageUrl,
+                    phonenumber: state.phonenumber,
+                    name: state.name,
+                    location: state.location,
                 })
                 .then(() => {
 
@@ -92,32 +95,25 @@ export function getUser(){
 
 
 export function getUserInfo() {
-    const userInfo = {};
-    const session = auth.currentUser;
-
-    if (session !== null) {
-        session.providerData.forEach((profile) => {
-        userInfo.providerId = profile.providerId;
-        userInfo.uid = profile.uid;
-        userInfo.displayName = profile.displayName;
-        userInfo.email = profile.email;
-        userInfo.photoURL = profile.photoURL;
+    return new Promise((resolve, reject) => {
+        const userRef = ref(db, 'users/' + user.uid);
+        onValue(userRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            console.log(data.email);
+            resolve(data);
+          } else {
+            reject(new Error("User data not found"));
+          }
+        });
       });
-    }
-  
-    return userInfo;
   };
 
   export function updateinfo(text,title){
-    const info = `${title}: "${text}"`;
-    updateProfile(auth.currentUser, {
-        info
-      }).then(() => {
-        // Profile updated!
-        alert("Profile Updated!");
-      }).catch((error) => {
-        // An error occurred
-        // ...
+
+    
+    set(ref(db, 'users/' + user.uid), {
+
       });
   };
 
@@ -125,9 +121,10 @@ export function getUserInfo() {
     updateEmail(auth.currentUser, text).then(() => {
         // Email updated!
         alert("Email Updated!");
+        
       }).catch((error) => {
         // An error occurred
-        
+        console.log(error);
       });
       
   };

@@ -8,6 +8,7 @@ import {
     TouchableWithoutFeedback,
     View,
     FlatList,
+    useWindowDimensions,
 } from "react-native";
 
 import {
@@ -20,11 +21,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from "react";
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap,TabBar } from 'react-native-tab-view';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-
-function SearchScreen({ navigation }) {
-
+const SearchTab = ({ navigation }) => {
     const [clickstate, setState] = useState(false);
 
     const [data, setData] = useState([]);
@@ -72,9 +72,6 @@ function SearchScreen({ navigation }) {
                     </TouchableOpacity>
                 );
             },
-            // headerButton:() {
-
-            // },
         });
     });
 
@@ -131,6 +128,62 @@ function SearchScreen({ navigation }) {
         </View>
     );
 };
+const MapTab = () => {
+    return (
+        <View style={{ flex: 1 }}>
+            <MapView
+                style={{ flex: 1 }}
+                provider={PROVIDER_GOOGLE}
+                initialRegion={{
+                    latitude: 37.78825,
+                    longitude: -122.4324,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
+            />
+        </View>
+    );
+};
+
+function SearchScreen({ navigation }) {
+
+    const windowWidth = useWindowDimensions().width;
+
+    const renderScene = SceneMap({
+        SearchRoute: () => <SearchTab navigation={navigation} />,
+        MapRoute: MapTab,
+    });
+
+    const renderTabBar = props => (
+        <TabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: 'white' }}
+            labelStyle= {{color: '#1be3a7'}}
+        />
+    );
+
+    const [index, setIndex] = useState(0);
+    const [routes] = useState([
+        { key: 'SearchRoute', title: 'Search' },
+        { key: 'MapRoute', title: 'Map' },
+    ]);
+
+    return (
+        <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: windowWidth }}
+            style={styles.tabView}
+            renderTabBar={renderTabBar}
+        />
+    );
+
+
+};
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -138,6 +191,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingVertical: 20,
         paddingHorizontal: 10,
+    },
+    tabView: {
+        flex: 1,
+        backgroundColor: '#fff',
     },
     itemContainer: {
         padding: 10,

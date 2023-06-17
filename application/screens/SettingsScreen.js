@@ -13,16 +13,16 @@ import {
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { Input } from 'react-native-elements';
-import { getUserInfo, handleLogOut, updatePassWord, updateinfo } from '../helper/authcontoller';
-import { updateEmail } from 'firebase/auth';
+import { getUserInfo, handleLogOut, updateemail, updatePassWord, updateinfo } from '../helper/authcontoller';
 
 
 const settingsData = [
-    { id: '1', title: 'Email' },
-    { id: '2', title: 'Password' },
-    { id: '3', title: 'Phone Number' },
-    { id: '4', title: 'Name' },
-    { id: '5', title: 'Location' },
+    { username: "", },
+    { id: '1', title: 'Email', email: '', },
+    { id: '2', title: 'Password', password: '', },
+    { id: '3', title: 'Phone Number', phonenumber: '', },
+    { id: '4', title: 'Name', name: '', },
+    { id: '5', title: 'Location', location: '', },
     { id: '6', title: 'Log Out' },
 ];
 
@@ -42,17 +42,20 @@ function SettingScreen({ navigation }) {
     const handleSave = () => {
         // Perform the necessary actions to save the updated setting
         // For example, make an API call to update the setting on the server
-        if(settingValue.id === '1'){
-            updateEmail(inputstate);
-        }else if(setSettingValue.id ==='2'){
+        console.log(inputstate);
+
+        if (settingValue.id === '1') {
+            updateemail(inputstate);
+        } else if (settingValue.id === '2') {
+
             updatePassWord(inputstate);
         }
         else {
-            updateinfo(inputstate,settingValue);
+            updateinfo(inputstate, settingValue);
         }
-        console.log(inputstate);
         // Close the modal after saving
         closeModal();
+        settingInput("");
     };
 
     const handleSettingPress = (setting) => {
@@ -84,9 +87,9 @@ function SettingScreen({ navigation }) {
     );
 
     const display = (info) => {
-        const profile = getUserInfo(); 
-        console.log(profile);       
-        switch (info.id){
+        const profile = getUserInfo();
+        // console.log(profile);       
+        switch (info.id) {
             case '1': return profile.email;
             case '2': return profile.password;
             case '3': return profile.phonenumber;
@@ -94,7 +97,7 @@ function SettingScreen({ navigation }) {
             case '5': return profile.location;
             default: return null;
         }
-        
+
     };
 
     return (

@@ -15,7 +15,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yardsale.myapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBNSPQNPsqQsS9ItjrC-vAz6VeCArJrgmk"
+      }
     },
     "android": {
       "adaptiveIcon": {
