@@ -61,7 +61,7 @@ function SettingScreen({ navigation }) {
         }
     };
     const handleSave = () => {
-        const title = findSettingByProperty(settingValue.id);
+        const title = findSettingByProperty(settingValue);
         if (title) {
             updateinfo(input, title);
         }
@@ -147,9 +147,6 @@ function SettingScreen({ navigation }) {
                 keyExtractor={(item) => item.id}
                 style={styles.list}
             />
-            <View>
-                {AddressAutocomplete}
-            </View>
         </View>
     );
 }
