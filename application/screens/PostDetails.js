@@ -177,8 +177,9 @@ const PostDetails = ({ route, navigation }) => {
                             <Feather name="user" size={24} color="black" />
                             <Text style={styles.descriptionTitle}>Seller Information</Text>
                         </View>
-                        <View>
-                            <Text>Give Seller details</Text>
+                        <View style={styles.sellingItem}>
+                            <Text>Phone Number: {item?.sellerPhone}</Text>
+                            <Text>Email: {item.sellerEmail}</Text>
                         </View>
                     </View>
                 </View>
