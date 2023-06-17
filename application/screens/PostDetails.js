@@ -76,116 +76,235 @@ const PostDetails = ({ route, navigation }) => {
 
         const postImages = item?.items[0]?.images //Get Images from DB
 
-        const photos = postImages.map((item) => ({ uri: item }));
+        var photos = postImages?.map((item) => ({ uri: item }));
 
-        return (
-            <View style={styles.itemContainer}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width, height: width }}>
-                        <ScrollView
-                            horizontal={true}
-                            pagingEnabled={true}
-                            showsHorizontalScrollIndicator={false}
-                            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: this.scrollX } } }], { useNativeDriver: false })}
-                            scrollEventThrottle={16}
-                        >
-                            {photos.map((source, i) => {
+        if (photos) {
+            return (
+                <View style={styles.itemContainer}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ width, height: width }}>
+                            <ScrollView
+                                horizontal={true}
+                                pagingEnabled={true}
+                                showsHorizontalScrollIndicator={false}
+                                onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: this.scrollX } } }], { useNativeDriver: false })}
+                                scrollEventThrottle={16}
+                            >
+                                {photos?.map((source, i) => {
+                                    return (
+                                        <Image
+                                            key={i}
+                                            style={{ width, height: width }}
+                                            source={source}
+                                        />
+                                    );
+                                })}
+
+                            </ScrollView>
+                        </View>
+                        <View style={{ flexDirection: 'row' }} >
+                            {photos?.map((_, i) => {
+                                let opacity = position.interpolate({
+                                    inputRange: [i - 1, i, i + 1],
+                                    outputRange: [0.3, 1, 0.3],
+                                    extrapolate: 'clamp'
+                                });
                                 return (
-                                    <Image
-                                        key={i}
-                                        style={{ width, height: width }}
-                                        source={source}
-                                    />
+                                    <Animated.View key={i} style={{ opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5 }} />
                                 );
                             })}
+                        </View>
+                    </View>
 
-                        </ScrollView>
+                    <View style={styles.detailContainer}>
+
+                        <View style={styles.titleHeader}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <TouchableOpacity onPress={toggleIcon}>
+                                {isOutline ? (
+                                    <MaterialCommunityIcons name="cards-heart" size={35} color="#5DB075" />
+                                ) : (
+                                    <MaterialCommunityIcons name="cards-heart-outline" size={35} color="#5DB075" />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.locationDetail}>
+
+                            <View style={styles.subHeader}>
+                                <Ionicons name="md-location-sharp" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.address}, {item.city},{item.zip}</Text>
+                            </View>
+
+                            <View style={styles.subHeader}>
+                                <MaterialCommunityIcons name="calendar-check" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.date}</Text>
+                            </View>
+
+                            <View style={styles.subHeader}>
+                                <MaterialCommunityIcons name="clock" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.time}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <MaterialCommunityIcons name="details" size={24} color="#5DB075" />
+                                <Text style={styles.descriptionTitle}>About the sale</Text>
+                            </View>
+
+                            <Text style={styles.saleDescription}>{item.description}</Text>
+                        </View>
+
+
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <MaterialCommunityIcons name="format-list-checkbox" size={24} color="#5DB075" />
+                                <Text style={styles.descriptionTitle}>Selling Items</Text>
+                            </View>
+                            <View style={styles.sellingItem}>
+                                {item?.items.map((element, index) => (
+                                    <View style={styles.eachSelling}>
+                                        <MaterialCommunityIcons name="arrow-right" size={24} color="#808080" />
+                                        <Text style={styles.saleDescription}>{element.itemTitle}</Text>
+                                    </View>
+                                ))}
+                            </View>
+
+                        </View>
+
+
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <Feather name="user" size={24} color="black" />
+                                <Text style={styles.descriptionTitle}>Seller Information</Text>
+                            </View>
+                            <View style={styles.sellingItem}>
+                                <Text>Phone Number: {item?.sellerPhone}</Text>
+                                <Text>Email: {item.sellerEmail}</Text>
+                            </View>
+                        </View>
                     </View>
-                    <View style={{ flexDirection: 'row' }} >
-                        {photos.map((_, i) => {
-                            let opacity = position.interpolate({
-                                inputRange: [i - 1, i, i + 1],
-                                outputRange: [0.3, 1, 0.3],
-                                extrapolate: 'clamp'
-                            });
-                            return (
-                                <Animated.View key={i} style={{ opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5 }} />
-                            );
-                        })}
-                    </View>
+
                 </View>
+            );
+        } else {
 
-                <View style={styles.detailContainer}>
+            photos = [
+                {uri: 'https://firebasestorage.googleapis.com/v0/b/yarn-sale-4352a.appspot.com/o/image_1.jpg?alt=media&token=e6cfc6ff-3525-4754-8f6e-243ff07fc9dd'},
+                {uri: 'https://firebasestorage.googleapis.com/v0/b/yarn-sale-4352a.appspot.com/o/image_3.jpg?alt=media&token=a865d395-797f-4a4f-9b0f-e0b683913f68'},
+                {uri: 'https://firebasestorage.googleapis.com/v0/b/yarn-sale-4352a.appspot.com/o/image_6.jpg?alt=media&token=788bf6c8-2a3c-4544-80c9-f4b6a7812b54'}
+            ]
+            return (
+                <View style={styles.itemContainer}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ width, height: width }}>
+                            <ScrollView
+                                horizontal={true}
+                                pagingEnabled={true}
+                                showsHorizontalScrollIndicator={false}
+                                onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: this.scrollX } } }], { useNativeDriver: false })}
+                                scrollEventThrottle={16}
+                            >
+                                {photos?.map((source, i) => {
+                                    return (
+                                        <Image
+                                            key={i}
+                                            style={{ width, height: width }}
+                                            source={source}
+                                        />
+                                    );
+                                })}
 
-                    <View style={styles.titleHeader}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <TouchableOpacity onPress={toggleIcon}>
-                            {isOutline ? (
-                                <MaterialCommunityIcons name="cards-heart" size={35} color="#5DB075" />
-                            ) : (
-                                <MaterialCommunityIcons name="cards-heart-outline" size={35} color="#5DB075" />
-                            )}
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.locationDetail}>
-
-                        <View style={styles.subHeader}>
-                            <Ionicons name="md-location-sharp" size={24} color="#5DB075" />
-                            <Text style={styles.description}>{item.address}, {item.city},{item.zip}</Text>
+                            </ScrollView>
                         </View>
-
-                        <View style={styles.subHeader}>
-                            <MaterialCommunityIcons name="calendar-check" size={24} color="#5DB075" />
-                            <Text style={styles.description}>{item.date}</Text>
-                        </View>
-
-                        <View style={styles.subHeader}>
-                            <MaterialCommunityIcons name="clock" size={24} color="#5DB075" />
-                            <Text style={styles.description}>{item.time}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.subContainer}>
-                        <View style={styles.row}>
-                            <MaterialCommunityIcons name="details" size={24} color="#5DB075" />
-                            <Text style={styles.descriptionTitle}>About the sale</Text>
-                        </View>
-
-                        <Text style={styles.saleDescription}>{item.description}</Text>
-                    </View>
-
-
-                    <View style={styles.subContainer}>
-                        <View style={styles.row}>
-                            <MaterialCommunityIcons name="format-list-checkbox" size={24} color="#5DB075" />
-                            <Text style={styles.descriptionTitle}>Selling Items</Text>
-                        </View>
-                        <View style={styles.sellingItem}>
-                            {item?.items.map((element, index) => (
-                                <View style={styles.eachSelling}>
-                                    <MaterialCommunityIcons name="arrow-right" size={24} color="#808080" />
-                                    <Text style={styles.saleDescription}>{element.itemTitle}</Text>
-                                </View>
-                            ))}
-                        </View>
-
-                    </View>
-
-
-                    <View style={styles.subContainer}>
-                        <View style={styles.row}>
-                            <Feather name="user" size={24} color="black" />
-                            <Text style={styles.descriptionTitle}>Seller Information</Text>
-                        </View>
-                        <View style={styles.sellingItem}>
-                            <Text>Phone Number: {item?.sellerPhone}</Text>
-                            <Text>Email: {item.sellerEmail}</Text>
+                        <View style={{ flexDirection: 'row' }} >
+                            {photos?.map((_, i) => {
+                                let opacity = position.interpolate({
+                                    inputRange: [i - 1, i, i + 1],
+                                    outputRange: [0.3, 1, 0.3],
+                                    extrapolate: 'clamp'
+                                });
+                                return (
+                                    <Animated.View key={i} style={{ opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5 }} />
+                                );
+                            })}
                         </View>
                     </View>
+
+                    <View style={styles.detailContainer}>
+
+                        <View style={styles.titleHeader}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <TouchableOpacity onPress={toggleIcon}>
+                                {isOutline ? (
+                                    <MaterialCommunityIcons name="cards-heart" size={35} color="#5DB075" />
+                                ) : (
+                                    <MaterialCommunityIcons name="cards-heart-outline" size={35} color="#5DB075" />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.locationDetail}>
+
+                            <View style={styles.subHeader}>
+                                <Ionicons name="md-location-sharp" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.address}, {item.city},{item.zip}</Text>
+                            </View>
+
+                            <View style={styles.subHeader}>
+                                <MaterialCommunityIcons name="calendar-check" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.date}</Text>
+                            </View>
+
+                            <View style={styles.subHeader}>
+                                <MaterialCommunityIcons name="clock" size={24} color="#5DB075" />
+                                <Text style={styles.description}>{item.time}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <MaterialCommunityIcons name="details" size={24} color="#5DB075" />
+                                <Text style={styles.descriptionTitle}>About the sale</Text>
+                            </View>
+
+                            <Text style={styles.saleDescription}>{item.description}</Text>
+                        </View>
+
+
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <MaterialCommunityIcons name="format-list-checkbox" size={24} color="#5DB075" />
+                                <Text style={styles.descriptionTitle}>Selling Items</Text>
+                            </View>
+                            <View style={styles.sellingItem}>
+                                {item?.items.map((element, index) => (
+                                    <View style={styles.eachSelling}>
+                                        <MaterialCommunityIcons name="arrow-right" size={24} color="#808080" />
+                                        <Text style={styles.saleDescription}>{element.itemTitle}</Text>
+                                    </View>
+                                ))}
+                            </View>
+
+                        </View>
+
+
+                        <View style={styles.subContainer}>
+                            <View style={styles.row}>
+                                <Feather name="user" size={24} color="black" />
+                                <Text style={styles.descriptionTitle}>Seller Information</Text>
+                            </View>
+                            <View style={styles.sellingItem}>
+                                <Text>Phone Number: {item?.sellerPhone}</Text>
+                                <Text>Email: {item.sellerEmail}</Text>
+                            </View>
+                        </View>
+                    </View>
+
                 </View>
+            );
+        }
 
-            </View>
-        );
+
     }
 
     return (
