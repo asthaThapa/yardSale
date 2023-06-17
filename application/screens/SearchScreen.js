@@ -12,8 +12,7 @@ import {
 
 import {
     initDB,
-    setupSignUpListener,
-    storeUser,
+    setUpListener
 } from "../helper/fb-data";
 
 import { Feather } from '@expo/vector-icons';
@@ -25,10 +24,15 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 
 
 function SearchScreen({ navigation }) {
-const [clickstate,setState] = useState(false);
+
+    const [clickstate, setState] = useState(false);
+
+    const [data, setData] = useState([]);
+
     useEffect(() => {
         try {
             initDB();
+            setUpListener(setData, "/postAd")
         } catch (err) {
             console.log(err);
         }
@@ -50,21 +54,21 @@ const [clickstate,setState] = useState(false);
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (clickstate) return;
+                return (
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (clickstate) return;
 
-                                // Handle create post action
-                                setState(true);
-                                handleCreatePost();
-                                console.log("created pressed");
-                                setState(false);                                
-                            }}
-                        >
-                            <Text style={styles.headerButton}>Create</Text>
-                        </TouchableOpacity>
-                    );
+                            // Handle create post action
+                            setState(true);
+                            handleCreatePost();
+                            console.log("created pressed");
+                            setState(false);
+                        }}
+                    >
+                        <Text style={styles.headerButton}>Create</Text>
+                    </TouchableOpacity>
+                );
             },
             // headerButton:() {
 
@@ -72,33 +76,13 @@ const [clickstate,setState] = useState(false);
         });
     });
 
-    //This needs to be fetched from database
-    const result = [
-        { id: '1', title: 'Big Yard Sale', location: 'Division Avenue', date: 'June 15, 2023' },
-        { id: '2', title: 'Vintage Treasures', location: 'Gerald R. Ford Presidential Museum', date: 'July 2, 2023' },
-        { id: '3', title: 'Neighborhood Sale', location: 'Downtown Market Grand Rapids', date: 'August 10, 2023' },
-        { id: '4', title: 'Big Neighborhood Sale', location: 'Grand Rapids Public Museum', date: 'September 14, 2023' },
-        { id: '5', title: 'Small Yard Sale', location: 'John Ball Zoo', date: 'October 11, 2023' },
-        { id: '6', title: 'Old Stuff Sale', location: 'Van Andel Arena', date: 'November 18, 2023' },
-        { id: '7', title: 'Friendly neighbour Sale', location: 'Grand Rapids Art Museum', date: 'December 24, 2023' },
-        { id: '8', title: '72th Street Yard Sale', location: 'Heritage Hill Historic District', date: 'May 15, 2023' },
-        { id: '9', title: 'Kids stuff only Sale', location: 'Fish Ladder Park', date: 'April 7, 2023' },
-        { id: '10', title: 'Car stuff Sale', location: 'Riverside Park', date: 'January 1, 2023' },
-        { id: '11', title: 'Neighborhood Sale', location: 'Grand Rapids Symphony', date: 'November 19, 2023' },
-        { id: '12', title: 'Summer Yard Sale', location: 'Wealthy Street', date: 'December 5, 2023' },
-        { id: '13', title: 'Heritage Yard Sale', location: 'Monroe Center Street', date: 'February 3, 2023' },
-        { id: '14', title: 'Yard Sale with snacks!', location: 'Frederik Meijer Gardens & Sculpture Park', date: 'March 8, 2023' },
-        { id: '15', title: 'Happy Yard Sale', location: 'Robinettes Apple Haus & Winery', date: 'April 28, 2023' },
-        { id: '16', title: 'Small Neighborhood Sale', location: 'Cherry Street', date: 'August 21, 2023' },
-    ]
-
     const searchText = '';
 
     const renderItem = ({ item }) => (
         <View style={styles.itemContainer}>
-            <Text style={styles.title}>{item.title}  <MaterialIcons name="arrow-forward-ios" size={20} color="#5DB075" style={flexDirection = "row"} /></Text>
+            <Text style={styles.title}>{item.title} <MaterialIcons name="arrow-forward-ios" size={20} color="#5DB075" style={flexDirection = "row"} /></Text>
             <Text style={styles.location}>
-                <MaterialIcons name="location-on" size={20} color="#5DB075" />{item.location}
+                <MaterialIcons name="location-on" size={20} color="#5DB075" />{item.address},{item.city},{item.zip}
             </Text>
             <Text style={styles.date}>{item.date}</Text>
         </View>
@@ -117,7 +101,7 @@ const [clickstate,setState] = useState(false);
                 <Feather name="search" size={24} color="#5DB075" />
             </View>
             <FlatList
-                data={result}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
             />

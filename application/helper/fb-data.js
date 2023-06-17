@@ -37,4 +37,30 @@ export function storeUser(item) {
 }
 
 
+export function saveItem(item, dbName) {
+  const db = getDatabase();
+  const reference = ref(db, dbName + "/");
+  push(reference, item);
+}
+
+
+export function setUpListener(updateFunc, dbName) {
+  const db = getDatabase();
+  const reference = ref(db, dbName + "/");
+  onValue(reference, (snapshot) => {
+    if (snapshot?.val()) {
+      const fbObject = snapshot.val();
+      const newArr = [];
+      Object.keys(fbObject).map((key, index) => {
+        newArr.push({ ...fbObject[key], id: key });
+      });
+      updateFunc(newArr);
+    } else {
+      updateFunc([]);
+    }
+  });
+}
+
+
+
 

@@ -18,7 +18,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref } from "firebase/storage";
 
 import {
-  initDB
+  initDB,
+  saveItem
 } from "../helper/fb-data";
 
 import { useEffect, useRef, useState } from "react";
@@ -121,21 +122,23 @@ export default function AddPostScreen({ navigation }) {
 
   //Form handling
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-
+  
   const Submit = (data) => {
-      if (elements.length < 1){
-        Alert.alert('Please add items');
-        return
-      }else{
-        data["time"] = time;
-        data["date"] = date;
-        data["items"] = elements
+    if (elements.length < 1) {
+      Alert.alert('Please add items');
+      return
+    } else {
+      data["time"] = time;
+      data["date"] = date;
+      data["items"] = elements
 
-        if (data['note'] == undefined){
-          data["note"] = '';
-        }
+      if (data['note'] == undefined) {
+        data["note"] = '';
       }
-      console.log(data["items"])
+
+     saveItem(data, "postAd")
+    }
+   
   };
 
   return (
@@ -430,9 +433,9 @@ const styles = StyleSheet.create({
     margin: 20,
     padding: 10
   },
-  errorMessage:{
+  errorMessage: {
     fontSize: 12,
-    fontStyle:'italic',
+    fontStyle: 'italic',
     color: 'red'
   }
 });
