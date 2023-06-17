@@ -129,7 +129,6 @@ useEffect(() =>{
                 }
             }));
 
-            console.log('Merged Data:', mergedData);
             setMarkers(mergedData);
 
         })
