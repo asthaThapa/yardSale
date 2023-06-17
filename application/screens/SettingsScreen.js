@@ -1,18 +1,14 @@
 import * as React from 'react';
 import {
-    Keyboard,
-    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
     FlatList,
-    Modal,
-    Button,
+    Modal
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { Input } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { getUserInfo, handleLogOut, updateemail, updatePassWord, updateinfo } from '../helper/authcontoller';
 import { AddressAutocomplete } from '../helper/mapcontroller';
 
@@ -25,6 +21,8 @@ const settingsData = [
     { id: '5', title: 'Location', location: '', },
     { id: '6', title: 'Log Out' },
 ];
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function SettingScreen({ navigation }) {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -133,12 +131,16 @@ function SettingScreen({ navigation }) {
                             onChangeText={text => setInput(text)}
                             placeholder={`Enter a new ${settingValue.title}`}
                         />
+                        <View style={styles.buttonDisplay}>
+                            <Button buttonStyle={styles.buttons} title="Save" onPress={handleSave} />
+                            <Button buttonStyle={styles.buttons} title="Cancel" onPress={closeModal} />
+                        </View>
 
-                        <Button title="Save" onPress={handleSave} />
-                        <Button title="Cancel" onPress={closeModal} />
                     </View>
                 </View>
             </Modal>
+            <Text style={styles.title}>
+                <MaterialCommunityIcons name="account-edit" size={30} color="#5DB075" /> Edit your settings</Text>
             <FlatList
                 data={settingsData}
                 renderItem={renderSettingItem}
@@ -155,17 +157,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        paddingVertical: 20,
+        paddingHorizontal: 10,
     },
+
     list: {
         paddingHorizontal: 16,
     },
+
     settingItem: {
         paddingVertical: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderBottomColor: '#ccc'
     },
     settingTitle: {
         fontSize: 18,
+        color: '#808080'
     },
     modalContainer: {
         flex: 1,
@@ -187,9 +194,23 @@ const styles = StyleSheet.create({
         fontSize: 15,
 
     },
-    input: {
-
+    title: {
+        marginBottom: 10,
+        fontSize: 28,
+        fontWeight: '700',
+        textAlign: 'center',
+        color: '#5DB075'
     },
+    buttonDisplay: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    buttons: {
+        backgroundColor: '#5DB075',
+        width: 100,
+        margin: 10
+    }
 });
 
 export default SettingScreen;
+
