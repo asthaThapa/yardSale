@@ -12,7 +12,7 @@ import AddPostScreen from './screens/AddPostScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import SettingScreen from './screens/SettingsScreen';
 import SignupScreen from './screens/SignupScreen';
-
+import PostDetails from './screens/PostDetails';
 
 //Screen names
 const loginPage = "Log In";
@@ -21,10 +21,12 @@ const addPostPage = "Create Your Post";
 const favoritePage = "Favorites";
 const settingsPage = "Settings";
 const signupPage = "Sign Up";
+const detailPage = "Details";
 
 const myTab = createBottomTabNavigator();
 const logStack = createNativeStackNavigator();
 const AppNavigator = createNativeStackNavigator();
+const detailStack = createNativeStackNavigator();
 
 function LogInStack() {
     return (
@@ -32,6 +34,14 @@ function LogInStack() {
             <logStack.Screen name={"Log In "} component={loginScreen} />
             <logStack.Screen name={signupPage} component={SignupScreen} />
         </logStack.Navigator>
+    );
+}
+function detailsStack(){
+    return (
+        <detailStack.Navigator>
+            <detailStack.Screen name={searchPage} component={SearchScreen} />
+            <detailStack.Screen name={detailPage} component={PostDetails} />
+        </detailStack.Navigator>
     );
 }
 function Main() {
@@ -90,7 +100,7 @@ function DefaultController() {
                 ]
             })}
         >
-            <myTab.Screen name={searchPage} component={SearchScreen} />
+            <myTab.Screen name={"Search"} component={detailsStack} />
             <myTab.Screen name={addPostPage} component={AddPostScreen} />
             <myTab.Screen name={favoritePage} component={FavoriteScreen} />
             <myTab.Screen name={settingsPage} component={SettingScreen} />
