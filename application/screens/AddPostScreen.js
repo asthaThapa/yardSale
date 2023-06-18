@@ -90,28 +90,33 @@ export default function AddPostScreen({ navigation }) {
   };
 
   const pickImage = async (elementIndex) => {
-
     const element = elements[elementIndex];
-
-    //Allow only upto 3 images
+  
+    // Allow only up to 3 images
     if (element.images.length >= 3) {
       Alert.alert('Maximum Limit Reached', 'You can select up to three images.');
       return;
     }
-
-    let media = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!media?.canceled) {
-      const updatedElements = [...elements];
-      updatedElements[elementIndex].images.push(media.assets[0].uri);
-      setElements(updatedElements);
+  
+    try {
+      let media = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!media?.canceled) {
+        const updatedElements = [...elements];
+        updatedElements[elementIndex].images.push(media.assets[0].uri);
+        setElements(updatedElements);
+      }
+    } catch (error) {
+      // Handle the error here
+      console.error('An error occurred while picking an image:', error);
     }
   };
+  
 
   // const deleteImage = (elementIndex, imageIndex) => {
   //   const updatedElements = [...elements];

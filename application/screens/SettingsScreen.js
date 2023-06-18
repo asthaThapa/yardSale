@@ -60,7 +60,7 @@ function SettingScreen({ navigation }) {
         }
     };
     const handleSave = () => {
-        const title = findSettingByProperty(settingValue);
+        const title = findSettingByProperty(settingValue.id);
         if (title) {
             updateinfo(input, title);
         }
@@ -105,7 +105,6 @@ function SettingScreen({ navigation }) {
     );
 
     const display = (info) => {
-        console.log(currentVal);
         switch (info.id) {
             case '1': return currentVal.email;
             case '2': return currentVal.password;
@@ -209,4 +208,3 @@ const styles = StyleSheet.create({
 });
 
 export default SettingScreen;
-

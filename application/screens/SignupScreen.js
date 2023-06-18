@@ -27,7 +27,7 @@ function SignupScreen({ navigation }) {
             headerRight: () => (
                 <TouchableOpacity
                     onPress={() =>
-                        navigation.navigate("Log In", { state })
+                        navigation.navigate("Log In ", { state })
                     }>
                     <Text style={styles.headerButton}>Log In</Text>
                 </TouchableOpacity>
