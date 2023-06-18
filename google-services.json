@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "234468991047",
+    "firebase_url": "https://yarn-sale-4352a-default-rtdb.firebaseio.com",
+    "project_id": "yarn-sale-4352a",
+    "storage_bucket": "yarn-sale-4352a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234468991047:android:029385a22ee8c2d15d5162",
+        "android_client_info": {
+          "package_name": "com.yardsale.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234468991047-aabahu38iuvpcjlrv9ct7gseg50ou4fc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIvEhgredGV4fiAkumQYeTQl2F2nnCOeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234468991047-aabahu38iuvpcjlrv9ct7gseg50ou4fc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "234468991047-m4kotnutcrtfpema5h7oc2s6r21cgfro.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yardsale.myapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
