@@ -14,6 +14,8 @@ import {
     setupFavoriteListener
 } from "../helper/fb-data";
 
+import { getUser } from '../helper/authcontoller';
+
 import { useEffect, useState } from "react";
 
 //Import Icons
@@ -27,7 +29,7 @@ export default function FavoriteScreen({ navigation }) {
     useEffect(() => {
         try {
             initDB();
-            setupFavoriteListener(setFavorite, "/favorites")
+            setupFavoriteListener(setFavorite, "/favorites", getUser())
             console.log(favorite)
         } catch (err) {
             console.log(err);

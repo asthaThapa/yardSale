@@ -11,6 +11,7 @@ import {
   Alert
 } from 'react-native';
 
+import { getUser } from '../helper/authcontoller';
 import { Button, Input } from '@rneui/themed';
 import { useForm } from 'react-hook-form';
 import DatePicker from '@react-native-community/datetimepicker';
@@ -117,13 +118,6 @@ export default function AddPostScreen({ navigation }) {
     }
   };
   
-
-  // const deleteImage = (elementIndex, imageIndex) => {
-  //   const updatedElements = [...elements];
-  //   updatedElements[elementIndex].images.splice(imageIndex, 1);
-  //   setElements(updatedElements);
-  // };
-
   //Form handling
   const { register, handleSubmit, formState: { errors }, setValue,reset } = useForm();
 
@@ -146,7 +140,11 @@ export default function AddPostScreen({ navigation }) {
         data["note"] = '';
       }
 
+      console.log(getUser())
+      data["userId"] = getUser();
+
       saveItem(data, "postAd")
+
       reset();
       navigation.navigate("Search");
     }

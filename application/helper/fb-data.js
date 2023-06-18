@@ -3,7 +3,6 @@ import { getAnalytics } from "firebase/analytics";
 
 import { getDatabase, onValue, push, ref, remove } from "firebase/database";
 import { firebaseConfig } from "../helper/fb-credentials";
-import { getUser } from '../helper/authcontoller';
 
 
 export function initDB() {
@@ -89,8 +88,7 @@ export function removeFavorite(postId, dbName) {
     });
 }
 
-export function setupFavoriteListener(updateFunc, dbName) {
-  const userId = getUser();
+export function setupFavoriteListener(updateFunc, dbName, userId) {
   const reference = ref(db, dbName + "/");
   onValue(reference, (snapshot) => {
     snapshot.forEach((childSnapshot) => {

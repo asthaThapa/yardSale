@@ -55,7 +55,7 @@ const PostDetails = ({ route, navigation }) => {
         if (!isOutline) {
             Alert.alert('Added to favorites!');
             try {
-                const postId = saveFavorite(postDetail, 'favorites')
+                const postId = saveFavorite(postDetail[0], 'favorites')
                 setFavoritePostId(postId)
             } catch (err) {
                 console.log(err);
